@@ -1,0 +1,47 @@
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+
+Vue.use(VueRouter)
+
+function load (component) {
+  return () => System.import(`components/${component}.vue`)
+}
+
+export default new VueRouter({
+  /*
+   * NOTE! VueRouter "history" mode DOESN'T works for Cordova builds,
+   * it is only to be used only for websites.
+   *
+   * If you decide to go with "history" mode, please also open /config/index.js
+   * and set "build.publicPath" to something other than an empty string.
+   * Example: '/' instead of current ''
+   *
+   * If switching back to default "hash" mode, don't forget to set the
+   * build publicPath back to '' so Cordova builds work again.
+   */
+
+  // [vue-router] Named Route 'mainpage' has a default child route. When
+  // navigating to this named route (:to="{name: 'mainpage'"), the default
+  // child route will not be rendered. Remove the name from this route and use
+  // the name of the default child route for named links instead.
+
+  routes: [
+    {
+      path: '/',
+      component: load('Models'),
+      children: [
+        { path: '', component: load('ModelsList') },
+        { path: 'add_model', component: load('ModelAdd') },
+        { path: ':model',
+          name: 'viewmodel',
+          component: load('ModelView'),
+          children: [
+            // { path: '', component: load('ModelAddData') },
+            { name: 'model_add_data', path: 'add_data', component: load('ModelAddData') }
+          ]
+        }
+      ]
+    }, // Default
+    { path: '*', component: load('Error404') } // Not found
+  ]
+})

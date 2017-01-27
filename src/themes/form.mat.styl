@@ -1,0 +1,60 @@
+.form
+  display: flex
+  min-width: 300px
+  width: 100%
+  flex-wrap: wrap
+  flex-flow: row wrap
+  .field
+    padding: 5px
+    width: 100%
+    &.half
+      max-width: 50%
+    &.one-quarter
+      max-width: 25%
+    &.two-quarters // is half, I know
+      max-width: 50%
+    &.three-quarters
+      max-width: 75%
+    &.one-fifth
+      max-width: 20%
+    &.two-fifths
+      max-width: 40%
+    &.three-fifths
+      max-width: 60%
+    &.four-fifths
+      max-width: 80%
+  .debug
+    background: #e0e0e0
+    padding: 10px
+    margin: 10px 0
+    border-radius: 2px
+  .label
+    font-size: 14px;
+    padding: 2px 0 4px 0;
+    display: block
+    color: #757575
+    margin: 0 0 5px 0
+
+  .fill
+    .textfield, textarea
+      width: 100%
+
+@media (max-width: 768px)
+  .form
+    .field
+      &.half
+        max-width: 100%
+      &.one-quarter
+        max-width: 100%
+      &.two-quarters
+        max-width: 100%
+      &.three-quarters
+        max-width: 100%
+      &.one-fifth
+        max-width: 100%
+      &.two-fifths
+        max-width: 100%
+      &.three-fifths
+        max-width: 100%
+      &.four-fifths
+        max-width: 100%
