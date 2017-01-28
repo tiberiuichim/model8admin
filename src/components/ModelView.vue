@@ -59,29 +59,29 @@ export default {
   },
   created: function () {
     console.log('created')
-      if (!this.$store.state.models.length) {
-        console.log('Pushing to frontpage')
-          this.$router.push({path: '/'})
-      }
+    if (!this.$store.state.models.length) {
+      console.log('Pushing to frontpage')
+      this.$router.push({path: '/'})
+    }
   },
   computed: {
     model: function () {
       const name = this.$route.params.model
-        const model = this.$store.state.models.filter(m => m.name === name)[0]
-        console.log('model', model)
-        return model
+      const model = this.$store.state.models.filter(m => m.name === name)[0]
+      console.log('model', model)
+      return model
     }
   },
   methods: {
     predict: function () {
       const self = this
-        this.$store.dispatch('useModel', {
-          url: this.model.url,
-          text: this.predict_text
-        }).then(function (data) {
-          console.log('received ', data)
-            self.prediction = data
-        })
+      this.$store.dispatch('useModel', {
+        url: this.model.url,
+        text: this.predict_text
+      }).then(function (data) {
+        console.log('received ', data)
+        self.prediction = data
+      })
     },
     addData: function () {
       console.log('adding data')

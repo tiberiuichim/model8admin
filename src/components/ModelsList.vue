@@ -3,20 +3,14 @@
   <div class="layout-view">
     <div class="layout-padding">
 
-      <input v-model="service_url" placeholder="http:/localhost:6543/">
-      <button class="secondary" @click="connect()">Connect</button>
-
-      <p class="caption">
-      <strong>The list of models</strong>
-      <br />
-      <small>
-        <span class="desktop-only">
-          The models are have a learning engine and they need to process data
-          before they can be used for predictions.
-        </span>
-      </small>
+      <p class="small caption">
+      <h5>The models
+        <button class="pink" @click="addModel()"><i>add</i></button>
+      </h5>
+      The models are have a learning engine and they need to process data
+      before they can be used for predictions.
       </p>
-      <div class="row wrap smallgutter group">
+      <div class="row wrap group">
         <div class="card width-1of5 " v-for="model in models" @click="viewModel(model.name)" >
           <div class="card-title">
             <a href="" class="text-black">
@@ -34,9 +28,6 @@
             </div>
           </div>
         </div>
-        <div class="width-1of5" @click="addModel()">
-          <button class="secondary"><i>add</i></button>
-        </div>
       </div>
     </div>
   </div>
@@ -47,14 +38,6 @@ export default {
   computed: {
     models () {
       return this.$store.state.models
-    },
-    service_url: {    // TODO: refactor this
-      get: function () {
-        return this.$store.state.service_url
-      },
-      set: function (val) {
-        this.$store.commit({ type: 'set_service_url', service_url: val })
-      }
     }
   },
   methods: {
@@ -63,9 +46,6 @@ export default {
     },
     viewModel: function (name) {
       this.$router.push({path: '/' + name})
-    },
-    connect: function () {
-      this.$store.dispatch('reconnect', {service_url: this.service_url})
     }
   }
 }
