@@ -1,9 +1,16 @@
 <template>
   <div class="layout-view">
     <div class="layout-padding">
-      <h4>Model {{ $route.params.model }}
-        <small>@ {{ model.url }}</small>
+      <h4>
+        Model {{ $route.params.model }}
+        <i class="on-left text-green" v-if="model.can_predict">check_box</i>
+        <span v-if="!model.can_predict">
+          <small><small><small><i class="text-red" >indeterminate_check_box</i>Untrained model</small></small></small>
+        </span>
       </h4>
+      <p>
+        <small>{{ model.url }}</small>
+      </p>
       <p>
       <span v-for="(k, v) in model.labels" class="chip label bg-light text-faded">
         <i class="on-left">mail</i>
@@ -11,7 +18,7 @@
       </span>
       </p>
       <div class="form fill" v-if="model.can_predict">
-        <div class="field one-quarter">
+        <div class="field one-half">
           <label class="title">Predict text:</label>
           <input v-model="predict_text" type="text" />
         </div>
@@ -19,8 +26,15 @@
       </div>
       <div v-if="show_controls">
         <div class="form fill group" v-if="!model.can_predict">
-          <button class="primary" @click="addData()">Add new data</button>
-          <button class="primary" @click="train()">Train model</button>
+          <button class="green" @click="addData()">
+            <i class="on-left">add</i>
+            Add new data
+          </button>
+          <button class="teal" @click="train()">
+            <i class="on-left">build</i>
+            (Re)Train model
+          </button>
+          <div >{{ prediction }}</div>
         </div>
       </div>
       <transition>
@@ -30,19 +44,17 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
-import { showError } from 'errorlib'
-
 export default {
   data () {
     return {
       'predict_text': '',
+      'prediction': '',
       'show_controls': true
     }
   },
-  mounted: function () {
-    console.log('Mounted ModelView')
-  },
+  // mounted: function () {
+  //   console.log('Mounted ModelView')
+  // },
   created: function () {
     console.log('created')
     if (!this.$store.state.models.length) {
@@ -60,7 +72,12 @@ export default {
   },
   methods: {
     predict: function () {
-      console.log('predicting', this.predict_text)
+      this.$store.dispatch('useModel', {
+        url: this.model.url,
+        text: this.predict_text
+      }).then((data) => {
+        console.log('predicted', data)
+      })
     },
     addData: function () {
       console.log('adding data')
@@ -72,18 +89,11 @@ export default {
       })
     },
     train: function () {
-      // TODO: refactor to store action
-      console.log('training', this)
-      axios.post(this.model.url, {}).then(
-        function (response) {
-          console.log(response.data)
-        }
-      ).catch(
-        function (error) {
-          showError('Error from server')
-          console.log(error)
-        }
-      )
+      this.$store.dispatch('trainModel', {
+        url: this.model.url
+      }).then(() => {
+        console.log('trained')
+      })
     }
   }
 }

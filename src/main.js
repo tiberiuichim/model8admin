@@ -11,7 +11,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import router from './router'
-import { showError } from './errorlib'
+import { showError, showInfo } from './errorlib'
 
 // register globally
 // Vue.component(Multiselect)
@@ -62,18 +62,55 @@ const store = new Vuex.Store({
     },
     addDataToModel: function (context, payload) {
       const url = payload.url
-      console.log('add data to model', payload)
       axios.put(url, {
         text: payload.text,
         label: payload.label
       }).then(function (response) {
-        context.commit({ type: 'set_connected' })
-        context.commit({ type: 'set_models', models: response.data.models })
+        if (response.data.models) {
+          context.commit({ type: 'set_connected' })
+          context.commit({ type: 'set_models', models: response.data.models })
+        }
+        else {
+          showError('Error: ' + response.data.error)
+        }
       }).catch(function (error) {
         showError('Error from server')
         console.log(error)
       })
+    },
+    trainModel: function (context, payload) {
+      const url = payload.url
+      axios.post(url, { }).then(function (response) {
+        if (response.data.error) {
+          showError('Error: ' + response.data.error)
+        }
+        else {
+          showInfo('Model trained, it will become available soon')
+        }
+      }).catch(function (error) {
+        showError('Error from server')
+        console.log(error)
+      })
+    },
+    useModel: function (context, payload) {
+      const url = payload.url + '/prophet'
+      const text = payload.text
+      var data = null
+      axios.post(url, { text }).then(function (response) {
+        if (response.data.error) {
+          showError('Error: ' + response.data.error)
+        }
+        else {
+          data = response.data
+          console.log('response', data)
+        }
+      }).catch(function (error) {
+        showError('Error from server')
+        console.log(error)
+      })
+      return data
     }
+
   }
 })
 

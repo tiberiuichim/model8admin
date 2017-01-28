@@ -6,9 +6,9 @@
         Model8 Interface
       </q-toolbar-title>
     </div>
-    <q-transition name="slide">
+    <!-- <q&#45;transition name="slide"> -->
       <router-view class="layout-view" />
-    </q-transition>
+    <!-- </q&#45;transition> -->
   </q-layout>
 </template>
 

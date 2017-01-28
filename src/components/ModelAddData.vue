@@ -29,8 +29,9 @@
         </multiselect>
       </div>
     </div>
-    <div>
+    <div class="group">
       <button @click="submit()" :disabled="!(selected_label && text)" class="primary">Add</button>
+      <button @click="cancel()">Cancel</button>
     </div>
 </template>
 
@@ -65,6 +66,9 @@ export default {
         this.$parent.show_controls = true
         // this.$router.push('/')
       })
+    },
+    cancel: function () {
+      this.$parent.show_controls = true
     },
     addLabel: function (tag) {
       this.labels.push({code: tag, name: tag})
