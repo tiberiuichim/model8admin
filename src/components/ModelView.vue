@@ -23,6 +23,7 @@
           <input v-model="predict_text" type="text" />
         </div>
         <button class="primary" @click="predict()">Submit</button>
+        <div >{{ prediction }}</div>
       </div>
       <div v-if="show_controls">
         <div class="form fill group" v-if="!model.can_predict">
@@ -34,7 +35,6 @@
             <i class="on-left">build</i>
             (Re)Train model
           </button>
-          <div >{{ prediction }}</div>
         </div>
       </div>
       <transition>
@@ -48,7 +48,7 @@ export default {
   data () {
     return {
       'predict_text': '',
-      'prediction': '',
+      'prediction': null,
       'show_controls': true
     }
   },
@@ -72,11 +72,13 @@ export default {
   },
   methods: {
     predict: function () {
+      const self = this
       this.$store.dispatch('useModel', {
         url: this.model.url,
         text: this.predict_text
-      }).then((data) => {
-        console.log('predicted', data)
+      }).then(function (data) {
+        console.log('received ', data)
+        self.prediction = data
       })
     },
     addData: function () {

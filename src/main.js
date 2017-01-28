@@ -95,20 +95,20 @@ const store = new Vuex.Store({
     useModel: function (context, payload) {
       const url = payload.url + '/prophet'
       const text = payload.text
-      var data = null
-      axios.post(url, { text }).then(function (response) {
-        if (response.data.error) {
-          showError('Error: ' + response.data.error)
-        }
-        else {
-          data = response.data
-          console.log('response', data)
-        }
-      }).catch(function (error) {
-        showError('Error from server')
-        console.log(error)
+
+      return new Promise((resolve, reject) => {
+        axios.post(url, { text }).then(function (response) {
+          if (response.data.error) {
+            showError('Error: ' + response.data.error)
+          }
+          else {
+            resolve(response.data)
+          }
+        }).catch(function (error) {
+          showError('Error from server')
+          console.log(error)
+        })
       })
-      return data
     }
 
   }
