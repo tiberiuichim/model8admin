@@ -1,24 +1,18 @@
 <template>
   <q-layout>
 
-    <div slot="header" class="toolbar primary">
-
-      <q-toolbar-title :padding="1">
-        <router-link to="/"><i class="text-white on-left">home</i></router-link>
-        Model8 Interface
-
-      </q-toolbar-title>
-
-      <div class="auto flex within-iframe-hide justify-end">
-        <input v-model="service_url" class="bg-blue text-white" placeholder="http:/localhost:6543/">
-        <button class="secondary" @click="connect()">Connect</button>
-      </div>
-
+    <div slot="header" >
+      <q-tabs :refs="$refs" class="pink" default-tab="tab-list">
+        <q-tab name="tab-list" :route="{name: 'models_list'}" icon="view_list">Models</q-tab>
+        <q-tab name="tab-add" :route="{name: 'models_add_model'}" icon="add">Add</q-tab>
+      </q-tabs>
     </div>
-    <!-- <q&#45;transition name="slide"> -->
-    <router-view class="layout-view" ></router-view>
-    <q-ajax-bar></q-ajax-bar>
-    <!-- </q&#45;transition> -->
+
+    <div class="layout-view">>
+      <router-view></router-view>
+      <q-ajax-bar></q-ajax-bar>
+    </div>
+
   </q-layout>
 </template>
 
@@ -27,19 +21,14 @@ export default {
   data () {
     return {}
   },
-  computed: {
-    service_url: {    // TODO: refactor this
-      get: function () {
-        return this.$store.state.service_url
-      },
-      set: function (val) {
-        this.$store.commit({ type: 'set_service_url', service_url: val })
-      }
+  created: function () {
+    console.log('Service_url at creation', this.$store.state.service_url)
+    if (!this.$store.state.service_url) {
+      console.log('Not connected, going to frontpage')
+      this.$router.push('/')
     }
-  },
-  methods: {
-    connect: function () {
-      this.$store.dispatch('reconnect', {service_url: this.service_url})
+    else {
+      this.$router.push({name: 'models_list'})
     }
   }
 }

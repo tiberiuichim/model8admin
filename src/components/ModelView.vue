@@ -1,44 +1,32 @@
 <template>
-  <div class="layout-view">
-    <div class="layout-padding">
-      <h4>
-        Model {{ $route.params.model }}
-        <i class="on-left text-green" v-if="model.can_predict">check_box</i>
-        <span v-if="!model.can_predict">
-          <small><small><small><i class="text-red" >indeterminate_check_box</i>Untrained model</small></small></small>
-        </span>
-      </h4>
-      <p>
-        <small>{{ model.url }}</small>
-      </p>
-      <p>
-      <span v-for="(k, v) in model.labels" class="chip label bg-light text-faded">
-        <i class="on-left">mail</i>
-        {{ k }} {{ v }}
-      </span>
-      </p>
-      <div v-if="model.can_predict">
-        <div class="stacked-label">
-          <label class="title">Predict text</label>
-          <input v-model="predict_text" placeholder="Enter a phrase" type="text" />
-          <button class="primary" @click="predict()">Submit</button>
-        </div>
-        <div >{{ prediction }}</div>
+  <div class="layout-padding">
+
+    <h4 class="light-paragraph">
+      Model {{ model.name }}
+      <i class="on-left text-green" v-if="model.can_predict">check_box</i>
+    </h4>
+    <p>
+    <small>{{ model.url }}</small>
+    </p>
+
+    <div v-if="!model.can_predict" class="label token bg-red text-white">
+      <small><i class="on-left" >indeterminate_check_box</i>Untrained model,
+        model cannot predict!</small>
+    </div>
+    <p>
+    <span v-for="(k, v) in model.labels" class="chip label bg-light text-faded">
+      <i class="on-left">mail</i>
+      {{ k }} {{ v }}
+    </span>
+    </p>
+    <div ref="tab-use">
+      <div class="stacked-label" >
+        <label class="title">Predict text</label>
+        <input v-model="predict_text" :disabled="!model.can_predict" placeholder="Enter a phrase" type="text" />
+        <button class="primary" :disabled="!predict_text" @click="predict()">Submit</button>
       </div>
-      <div v-if="show_controls">
-        <div class="form fill group" v-if="!model.can_predict">
-          <button class="green" @click="addData()">
-            <i class="on-left">add</i>
-            Add new data
-          </button>
-          <button class="teal" @click="train()">
-            <i class="on-left">build</i>
-            (Re)Train model
-          </button>
-        </div>
-      </div>
-      <transition>
-        <router-view v-if="!show_controls"></router-view>
+      <transition name="bounce" >
+      <div v-if="prediction" class="token label bg-faded">{{ prediction }}</div>
       </transition>
     </div>
   </div>
@@ -48,8 +36,7 @@ export default {
   data () {
     return {
       'predict_text': '',
-      'prediction': null,
-      'show_controls': true
+      'prediction': null
     }
   },
   watch: {
@@ -57,14 +44,8 @@ export default {
       this.prediction = ''
     }
   },
-  created: function () {
-    console.log('created')
-    if (!this.$store.state.models.length) {
-      console.log('Pushing to frontpage')
-      this.$router.push({path: '/'})
-    }
-  },
-  computed: {
+
+  computed: { // TODO: use parent model
     model: function () {
       const name = this.$route.params.model
       const model = this.$store.state.models.filter(m => m.name === name)[0]
@@ -72,6 +53,7 @@ export default {
       return model
     }
   },
+
   methods: {
     predict: function () {
       const self = this
@@ -81,22 +63,6 @@ export default {
       }).then(function (data) {
         console.log('received ', data)
         self.prediction = data
-      })
-    },
-    addData: function () {
-      console.log('adding data')
-      this.show_controls = false
-      const name = this.$route.params.model
-      this.$router.push({
-        name: 'model_add_data',
-        params: { model: name }
-      })
-    },
-    train: function () {
-      this.$store.dispatch('trainModel', {
-        url: this.model.url
-      }).then(() => {
-        console.log('trained')
       })
     }
   }

@@ -22,7 +22,7 @@ Vue.use(Quasar) // Install Quasar Framework
 const store = new Vuex.Store({
   state: {
     models: [],
-    service_url: 'http://localhost:6543/',
+    service_url: '',
     connected: false
   },
   mutations: {
@@ -62,20 +62,24 @@ const store = new Vuex.Store({
     },
     addDataToModel: function (context, payload) {
       const url = payload.url
-      axios.put(url, {
-        text: payload.text,
-        label: payload.label
-      }).then(function (response) {
-        if (response.data.models) {
-          context.commit({ type: 'set_connected' })
-          context.commit({ type: 'set_models', models: response.data.models })
-        }
-        else {
-          showError('Error: ' + response.data.error)
-        }
-      }).catch(function (error) {
-        showError('Error from server')
-        console.log(error)
+      return new Promise((resolve, reject) => {
+        axios.put(url, {
+          text: payload.text,
+          label: payload.label
+        }).then(function (response) {
+          if (response.data.models) {
+            context.commit({ type: 'set_connected' })
+            context.commit({ type: 'set_models', models: response.data.models })
+            showInfo('Labeled data has been added.')
+            resolve(response)
+          }
+          else {
+            showError('Error: ' + response.data.error)
+          }
+        }).catch(function (error) {
+          showError('Error from server')
+          console.log(error)
+        })
       })
     },
     trainModel: function (context, payload) {

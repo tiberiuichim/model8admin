@@ -20,6 +20,7 @@ export default new VueRouter({
    * build publicPath back to '' so Cordova builds work again.
    */
 
+  // tibi:
   // [vue-router] Named Route 'mainpage' has a default child route. When
   // navigating to this named route (:to="{name: 'mainpage'"), the default
   // child route will not be rendered. Remove the name from this route and use
@@ -28,20 +29,26 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
+      component: load('Home')
+    }, // Default
+    {
+      path: '/models',
+      name: 'models',
       component: load('Models'),
       children: [
-        { path: '', component: load('ModelsList') },
-        { path: 'add_model', component: load('ModelAdd') },
-        { path: ':model',
-          name: 'viewmodel',
-          component: load('ModelView'),
-          children: [
-            // { path: '', component: load('ModelAddData') },
-            { name: 'model_add_data', path: 'add_data', component: load('ModelAddData') }
-          ]
-        }
+        { path: 'all', name: 'models_list', component: load('ModelsList') },
+        { path: 'add_model', name: 'models_add_model', component: load('ModelAdd') }
       ]
-    }, // Default
+    },
+    {
+      path: '/model/:model',
+      name: 'model',
+      component: load('Model'),
+      children: [
+        { path: '/model/:model/view', name: 'modelview', component: load('ModelView') },
+        { path: '/model/:model/build', name: 'modelbuild', component: load('ModelBuild') }
+      ]
+    },
     { path: '*', component: load('Error404') } // Not found
   ]
 })

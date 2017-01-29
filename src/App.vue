@@ -7,10 +7,13 @@
 
 <script>
 require('themes/form.mat.styl')
+require('vue2-animate/dist/vue2-animate.min.css')
 /*
  * Root component
  */
 export default {}
 </script>
 
-<style></style>
+<style>
+#q-app { height: 100% }
+</style>

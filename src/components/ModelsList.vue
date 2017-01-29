@@ -1,32 +1,19 @@
 <template>
+  <div class="layout-padding">
 
-  <div class="layout-view">
-    <div class="layout-padding">
+    <p class="small caption">
+    <h4>List of models </h4>
+    Models have a learning engine and they need to process data before
+    they can be used for predictions.
+    </p>
 
-      <p class="small caption">
-      <h5>The models
-        <button class="pink" @click="addModel()"><i>add</i></button>
-      </h5>
-      The models are have a learning engine and they need to process data
-      before they can be used for predictions.
-      </p>
-      <div class="row wrap group">
-        <div class="card width-1of5 " v-for="model in models" @click="viewModel(model.name)" >
-          <div class="card-title">
-            <a href="" class="text-black">
-              <i class="on-left">input</i>
-              {{ model.name }}
-            </a>
-          </div>
-          <div class="card-content" >
-            <div class="group">
-              <div v-for="(k, v) in model.labels" class="chip label
-              bg-light text-faded">
-                <!-- <i class="on&#45;left">mail</i> -->
-                {{ k }} {{ v }}
-              </div>
-            </div>
-          </div>
+    <div id="model-list" class="list striped">
+      <div class="item" v-for="model in models" >
+        <div class="item-content">
+          <router-link :to="{name: 'model', params: {model: model.name}}" >
+            {{ model.name }}
+            <i v-if="model.can_predict" class="on-left text-green">done</i>
+          </router-link>
         </div>
       </div>
     </div>
@@ -42,20 +29,20 @@ export default {
   },
   methods: {
     addModel: function (name) {
-      this.$router.push({path: '/add_model'})
+      this.$router.push({name: 'add_model'})
     },
     viewModel: function (name) {
-      this.$router.push({path: '/' + name})
+      this.$router.push({name: 'model', model: name})
     }
   }
 }
 </script>
 
 <style>
-.layout-view {
-  padding: 2rem;
-}
-.card {
+/* .layout-view { */
+/*   padding: 2rem; */
+/* } */
+#model-list .item {
   cursor: pointer;
 }
 </style>

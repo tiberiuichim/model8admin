@@ -1,6 +1,7 @@
 <template>
-  <div class="group">
+  <div class="layout-padding">
     <h5>Add data</h5>
+
     <div class="form">
 
       <div class="field half">
@@ -30,9 +31,13 @@
       </div>
     </div>
     <div class="group">
-      <button @click="submit()" :disabled="!(selected_label && text)" class="primary">Add</button>
-      <button @click="cancel()">Cancel</button>
+      <button @click="addData()" :disabled="!(selected_label && text)" class="primary">Add text</button>
+      <button class="teal" @click="train()">
+        <i class="on-left">build</i>
+        (Re)Train model
+      </button>
     </div>
+  </div>
 </template>
 
 <script>
@@ -43,13 +48,16 @@ export default {
   data () {
     const labels = []
     return {
+      model: '',
       text: '',
       labels,
       selected_label: null
     }
   },
   created: function () {
-    const _labels = Object.keys(this.$parent.model.labels)
+    const name = this.$route.params.model
+    this.model = this.$store.state.models.filter(m => m.name === name)[0]
+    const _labels = Object.keys(this.model.labels)
     const vocab = []
     _labels.forEach(
         (l) => { vocab.push({code: l, name: l}) }
@@ -57,21 +65,28 @@ export default {
     this.labels = vocab
   },
   methods: {
-    submit: function () {
+    addLabel: function (tag) {
+      this.labels.push({code: tag, name: tag})
+    },
+    addData: function () {
+      console.log('adding data')
       this.$store.dispatch('addDataToModel', {
-        url: this.$parent.model.url,
+        url: this.model.url,
         text: this.text,
         label: this.selected_label.code
       }).then(() => {
-        this.$parent.show_controls = true
-        // this.$router.push('/')
+        console.log('has been added')
+        this.selected_label = null
+        this.text = ''
+        // this.$router.push('build')
       })
     },
-    cancel: function () {
-      this.$parent.show_controls = true
-    },
-    addLabel: function (tag) {
-      this.labels.push({code: tag, name: tag})
+    train: function () {
+      this.$store.dispatch('trainModel', {
+        url: this.model.url
+      }).then(() => {
+        console.log('trained')
+      })
     }
   }
 }
