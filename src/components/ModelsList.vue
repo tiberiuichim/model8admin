@@ -39,9 +39,6 @@ export default {
 </script>
 
 <style>
-/* .layout-view { */
-/*   padding: 2rem; */
-/* } */
 #model-list .item {
   cursor: pointer;
 }

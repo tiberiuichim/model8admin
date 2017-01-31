@@ -46,7 +46,8 @@ export default new VueRouter({
       component: load('Model'),
       children: [
         { path: '/model/:model/view', name: 'modelview', component: load('ModelView') },
-        { path: '/model/:model/build', name: 'modelbuild', component: load('ModelBuild') }
+        { path: '/model/:model/build', name: 'modelbuild', component: load('ModelBuild') },
+        { path: '/model/:model/stats', name: 'modelstats', component: load('ModelStats') }
       ]
     },
     { path: '*', component: load('Error404') } // Not found

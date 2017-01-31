@@ -6,6 +6,7 @@
         <q-tab name="tab-list" :route="{name: 'models'}" icon="view_list">Models</q-tab>
         <q-tab name="tab-view" :route="{path: 'view'}" icon="input">Use</q-tab>
         <q-tab name="tab-build" :route="{path: 'build'}" icon="build">Build</q-tab>
+        <q-tab name="tab-stats" :route="{path: 'stats'}" icon="multiline_chart">Stats</q-tab>
       </q-tabs>
     </div>
 
@@ -24,11 +25,6 @@ export default {
       model: null
     }
   },
-  // computed: {
-  //   model: function () {
-  //     return model
-  //   }
-  // },
   created: function () {
     if (!this.$store.state.service_url) {
       console.log('Not connected, going to frontpage')

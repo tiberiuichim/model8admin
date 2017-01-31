@@ -10,8 +10,10 @@
     </p>
 
     <div v-if="!model.can_predict" class="label token bg-red text-white">
-      <small><i class="on-left" >indeterminate_check_box</i>Untrained model,
-        model cannot predict!</small>
+      <small>
+        <i class="on-left" >indeterminate_check_box</i>Untrained model.
+        Use the build tab to add data and train the model.
+      </small>
     </div>
     <p>
     <span v-for="(k, v) in model.labels" class="chip label bg-light text-faded">

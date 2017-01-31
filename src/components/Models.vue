@@ -8,7 +8,7 @@
       </q-tabs>
     </div>
 
-    <div class="layout-view">>
+    <div class="layout-view">
       <router-view></router-view>
       <q-ajax-bar></q-ajax-bar>
     </div>

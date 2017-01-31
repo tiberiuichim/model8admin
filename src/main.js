@@ -37,6 +37,8 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+
+    // TODO: refactor actions, too much code duplication
     reconnect: function (context, payload) {
       const url = payload.service_url
       console.log('connecting', url)
@@ -84,7 +86,7 @@ const store = new Vuex.Store({
     },
     trainModel: function (context, payload) {
       const url = payload.url
-      axios.post(url, { }).then(function (response) {
+      axios.post(url, {}).then(function (response) {
         if (response.data.error) {
           showError('Error: ' + response.data.error)
         }
@@ -102,6 +104,23 @@ const store = new Vuex.Store({
 
       return new Promise((resolve, reject) => {
         axios.post(url, { text }).then(function (response) {
+          if (response.data.error) {
+            showError('Error: ' + response.data.error)
+          }
+          else {
+            resolve(response.data)
+          }
+        }).catch(function (error) {
+          showError('Error from server')
+          console.log(error)
+        })
+      })
+    },
+    getStats: function (context, payload) {
+      const url = payload.url + '/prophet'
+
+      return new Promise((resolve, reject) => {
+        axios.get(url, {}).then(function (response) {
           if (response.data.error) {
             showError('Error: ' + response.data.error)
           }

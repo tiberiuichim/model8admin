@@ -28,9 +28,8 @@ export default {
   },
   methods: {
     add: function () {
-      // const self = this
       this.$store.dispatch('addModel', {name: this.model_name}).then(() => {
-        this.$router.push({path: '/'})
+        this.$router.push({name: 'models'})
       })
     }
   }
